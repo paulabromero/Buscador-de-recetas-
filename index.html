@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buscador de recetas</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <link rel="stylesheet" href="./assets/css/style.css">
+</head>
+
+<body>
+
+
+  <!-- NAVBAR -->
+  <nav class="navbar navbar-expand-lg navbar-light py-3 shadow-sm">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="#">
+        Buscador<span class="text-success">DeRecetas</span>
+      </a>
+
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="mainNavbar">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+          <li class="nav-item">
+            <a class="nav-link active" href="#">Inicio</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Categorías</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Ingredientes</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Blog</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- header HERO -->
+  <header class="hero-section d-flex align-items-center">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-6">
+
+          <p class="text-success fw-semibold mb-2">
+            Comida saludable
+          </p>
+
+          <h1 class="display-4 fw-bold hero-title">
+            Recetas deliciosas <br>
+            para tu cocina diaria
+          </h1>
+
+          <p class="hero-text">
+            Encuentra recetas fáciles con los ingredientes<br>
+            que ya tienes en casa. Come rico todos los días.
+          </p>
+
+          <a href="#" class="btn btn-success btn-lg hero-btn">
+            Ver recetas populares →
+          </a>
+
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- buscador y recetas  -->
+    <div class="container-fluid">
+      <div class="row ">
+        <!-- BUSCADOR -->
+
+        <form class="d-flex justify-content-center mt-4">
+          <div class="input-group w-75 w-md-50">
+            <input type="search" class="form-control form-control-lg" placeholder="Ingresa el ingrediente a buscar" />
+            <button class="btn btn-success btn-lg" type="submit">
+              Buscar
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+    </div>
+    <!-- Cards de recetas -->
+    <div class="row row-cols-1 row-cols-md-3 g-5 p-3 mt-1 mx-2">
+
+
+      <div class="col">
+        <div class="card">
+          <img src="./assets/img/cards/1-bowl-proteico.jpeg" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title"> Bowl Proteico de Quínoa</h5>
+            <p class="card-text">Ideal para después de tu entrenamiento.</p>
+            <a href="#" class="btn btn-success">Lee esta receta!</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="card">
+          <img src="./assets/img/cards/2-crema-verde.jpeg" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Crema Verde Detox con Brócoli</h5>
+            <p class="card-text">Para sentir tu cuerpo más liviano.</p>
+            <a href="#" class="btn btn-success">Lee esta receta!</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="card">
+          <img src="./assets/img/cards/3-ensalada.jpeg" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Ensalada Fitness</h5>
+            <p class="card-text">Perfecta para una comida ligera pero nutritiva.</p>
+            <a href="#" class="btn btn-success">Lee esta receta!</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="card">
+          <img src="./assets/img/cards/4-wok.jpeg" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Wok de Verduras</h5>
+            <p class="card-text">Rápido, saludable y lleno de sabor.</p>
+            <a href="#" class="btn btn-success">Lee esta receta!</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="card">
+          <img src="./assets/img/cards/5-avena.jpeg" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Avena y frutos rojos</h5>
+            <p class="card-text">Perfecto para empezar el día con energía.</p>
+            <a href="#" class="btn btn-success">Lee esta receta!</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="card">
+          <img src="./assets/img/cards/6-hamburguesa.jpeg" class="card-img-top" alt="...">
+          <div class="card-body">
+            <h5 class="card-title">Hamburguesa</h5>
+            <p class="card-text">Ideal para llevar y disfrutar en cualquier lugar de picnic.</p>
+            <a href="#" class="btn btn-success">Lee esta receta!</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+  <footer class="footer-custom">
+    <p>
+      ©Buscador de recetas 2025 GirlPower Group. Todos los derechos reservados.<br>
+      Contacto: <a href="buscadordecomida@noexiste.com">buscadordecomida@noexiste.com</a>
+    </p>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+  <script src="./assets/js/app.js"></script>
+</body>
+
+</html>
