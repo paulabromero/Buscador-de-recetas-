@@ -1,93 +1,54 @@
-const inputBusqueda = document.getElementById('busqueda');
-const btnBuscar = document.getElementById('btnBuscar');
-const contenedor = document.getElementById('resultados');
+// Se obtiene el elemento input para busqueda
+const inputSearch = document.getElementById("input_search")
+// Se obtiene el elemento boton para busqueda
+const btnSearch = document.getElementById("btn_search")
+// url de api para busqueda de recetas por ingredientes
+const urlSearchMealAPI = "https://www.themealdb.com/api/json/v1/1/filter.php?i="
+// url de api para traducciones
+const urlTranslate = " https://api.mymemory.translated.net/get?q="
+// par de lenguajes a traducir (primero el lenguaje de input a lenguaje output)
+const langpair = "langpair=es|en"
 
-btnBuscar.addEventListener('click', () => {
-  const ingrediente = inputBusqueda.value.trim();
-  if (ingrediente) {
-    buscarRecetas(ingrediente);
-  }
-});
+const APIKEY = "e7fb40c4-5c0f-4e98-97d1-b944c2096169:fx";
 
-inputBusqueda.addEventListener('keydown', (e) => {
-  if (e.key === 'Enter') {
-    e.preventDefault();
-    btnBuscar.click();
-  }
-});
+async function traducir(leng) {
+  const texto = inputSearch.value;
+  const targetLang = leng;
 
-async function buscarRecetas(ingrediente) {
-  contenedor.innerHTML = ''; // Limpia resultados anteriores
+  console.log(`DeepL-Auth-Key ${APIKEY}`)
+  console.log([texto])
+  console.log(targetLang)
+
+
+  const options = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `DeepL-Auth-Key ${APIKEY}`
+    },
+    body: JSON.stringify({
+      text: [texto],
+      target_lang: targetLang
+    })
+  };
 
   try {
-    const res = await fetch(`https://www.themealdb.com/api/json/v1/1/filter.php?i=${ingrediente}`);
-    const data = await res.json();
-
-    if (!data.meals) {
-      contenedor.innerHTML = `<p class="text-white text-center">Lo sentimos, no se encontraron recetas. Intenta con otro ingrediente.</p>`;
-      return;
-    }
-
-    for (const { idMeal, strMeal, strMealThumb } of data.meals) {
-      const card = document.createElement('div');
-      card.classList.add('card');
-
-      card.innerHTML = `
-        <img src="${strMealThumb}" class="card-img-top" alt="${strMeal}">
-        <div class="card-body">
-          <h5 class="card-title">${strMeal}</h5>
-          <button class="btn btn-primary ver-receta" data-id="${idMeal}">Ver Receta</button>
-        </div>
-      `;
-
-      contenedor.appendChild(card);
-    }
-
-    document.querySelectorAll('.ver-receta').forEach(btn => {
-      btn.addEventListener('click', async () => {
-        const id = btn.dataset.id;
-        mostrarIngredientes(id, btn.closest('.card'));
-      });
-    });
-
+    const response = await fetch('https://api-free.deepl.com/v2/translate', options);
+    const data = await response.json();
+    console.log(data);
   } catch (error) {
-    console.error('Error al buscar recetas:', error);
-    contenedor.innerHTML = `<p class="text-danger text-center">Ocurrió un error. Intenta de nuevo.</p>`;
+    console.error("Error al traducir:", error);
   }
 }
 
-async function mostrarIngredientes(id, card) {
-  try {
-    const res = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
-    const data = await res.json();
+// Se agrega un listener al ocurrir el evento click en el btn de busqueda
+btnSearch.addEventListener("click", async () => {
+  // let translateING = await fetch(`${urlTranslate}${encodeURIComponent(inputSearch.value)}&${langpair}`)
 
-    if (data.meals && data.meals.length > 0) {
-      const receta = data.meals[0];
-      let ingredientes = [];
+  traducir("EN") 
+  // console.log(translateING.json())
 
-      for (let i = 1; i <= 20; i++) {
-        const ing = receta[`strIngredient${i}`];
-        const med = receta[`strMeasure${i}`];
-        if (ing && ing.trim() !== '') {
-          ingredientes.push(`${ing} - ${med}`);
-        }
-      }
+  // let url = urlSearchMealAPI + ``
 
-      card.innerHTML = `
-        <div class="card-body">
-          <h5 class="card-title">${receta.strMeal}</h5>
-          <p><strong>Ingredientes:</strong></p>
-          <ul>${ingredientes.map(i => `<li>${i}</li>`).join('')}</ul>
-          <button class="btn btn-secondary volver">Volver</button>
-        </div>
-      `;
-
-      card.querySelector('.volver').addEventListener('click', () => {
-        buscarRecetas(inputBusqueda.value.trim());
-      });
-    }
-
-  } catch (error) {
-    console.error('Error al obtener detalles:', error);
-  }
-}
+  // fetch("https://www.themealdb.com/api/json/v1/1/filter.php?i=")
+})
