@@ -10,6 +10,8 @@ const urlTranslate = " https://api.mymemory.translated.net/get?q="
 const langpair = "langpair=es|en"
 // Obtenemos el elemento que sera el contenedor de las recetas obtenidas en la busqueda
 let contResult = document.getElementById("resultRecetas")
+// url para los detalles de la descripción de la receta.
+const urlDetails = "https://www.themealdb.com/api/json/v1/1/lookup.php?i="
 
 // const APIKEY = ""; API key de DeepL
 
@@ -19,16 +21,27 @@ const search = async() => {
     let translateING = await fetch(`${urlTranslate}${encodeURIComponent(inputSearch.value)}&${langpair}`)
     // traducir("EN")  --> integración con API DeepL, solo funciona en backend
     const ingTraducido = await translateING.json()
-    console.log(ingTraducido.responseData.translatedText)
+    // console.log(ingTraducido.responseData.translatedText)
     // Armamos la url con el ingrediente traducido al ingles para obtener recetas que contengan este ingrediente
     let url = urlSearchMealAPI + `${ingTraducido.responseData.translatedText}`
     // Realizamos la peticion a la API de recetas
     const recetasEnBruto = await fetch(url);
     const recetasRefinadas = await recetasEnBruto.json();
-    console.log(recetasRefinadas.meals);
+    // console.log(recetasRefinadas.meals);
     mostrarRecetas(recetasRefinadas.meals);
   }catch{
     console.log("Error")
+  }
+}
+
+const searchDetails = async(idMeal) => {
+  try{
+    let details = await fetch(`${urlDetails}${idMeal}`)
+    let dataDetails = await details.json()
+    console.log(dataDetails.meals[0])
+    return dataDetails.meals[0]
+  }catch{
+    
   }
 }
 
@@ -45,19 +58,41 @@ const mostrarRecetas = (recetas) => {
   `;
   }else{
     contResult.innerHTML = "";
-    recetas.forEach(receta => {
+    recetas.forEach(async receta => {
       const {idMeal, strMeal, strMealThumb} = receta;
-      console.log(`${idMeal} ${strMeal} ${strMealThumb}`)
+      // console.log(`${idMeal} ${strMeal} ${strMealThumb}`)
+     let details = await searchDetails(idMeal)
+      const ingredientes = Object.keys(details)
+        .filter(key => key.startsWith("strIngredient"))
+        .map(key => details[key]);
+    console.log(ingredientes)
+    // ingredientes.forEach()
+    const ingredientesFiltrados = ingredientes.filter(i=>i!="")
+      let listaDeIngredientes = ""
+     ingredientesFiltrados.forEach(ingrediente => listaDeIngredientes += `<li>${ingrediente}</li>`)
+    console.log(listaDeIngredientes)
       contResult.innerHTML += `<div class="col">
                                 <div class="card">
-                                  <img src="${strMealThumb}" class="card-img-top" alt="${strMeal}">
-                                  <div class="card-body">
-                                    <h5 class="card-title">${strMeal}</h5>
-                                    <p class="card-text">No se ha encontrado una descripción de esta receta.</p>
-                                    <a href="https://www.themealdb.com/meal/${idMeal}" class="btn btn-success">Lee esta receta!</a>
+                                  <div class="card-inner">
+                                    <div class="card-front">
+                                      <img src="${strMealThumb}" class="card-img-top" alt="${strMeal}">
+                                      <div class="card-body">
+                                        <h5 class="card-title">${strMeal}</h5>
+                                        <p class="card-text">Pasa el mouse sobre la tarjeta para ver más información</p>
+                                      </div>
+                                    </div>
+                                    <div class="card-back" data-bs-spy="scroll" data-bs-target="#simple-list-example" data-bs-offset="0" data-bs-smooth-scroll="true" class="scrollspy-example" tabindex="0">
+                                      <h5 class="card-title">${strMeal}</h5>
+                                      <p class="card-text">¡Descubre esta deliciosa receta y sorprende a todos con tus habilidades culinarias!</p>
+                                      <ul> 
+                                      ${listaDeIngredientes}
+                                      </ul>
+                                      <a href="https://www.themealdb.com/meal/${idMeal}" class="btn btn-success" target="_blank">Ver receta completa</a>
+                                    </div>
                                   </div>
                                 </div>
                               </div>`
+
   });
 }
 }
