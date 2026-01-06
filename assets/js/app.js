@@ -7,7 +7,8 @@ const urlSearchMealAPI = "https://www.themealdb.com/api/json/v1/1/filter.php?i="
 // url de api para traducciones
 const urlTranslate = " https://api.mymemory.translated.net/get?q="
 // Par de lenguajes a traducir (primero el lenguaje de input a lenguaje output)
-const langpair = "langpair=es|en"
+const langpair1 = "langpair=es|en"
+const langpair2 = "langpair=en|es"
 // Obtenemos el elemento que sera el contenedor de las recetas obtenidas en la busqueda
 let contResult = document.getElementById("resultRecetas")
 // url para los detalles de la descripción de la receta.
@@ -15,15 +16,19 @@ const urlDetails = "https://www.themealdb.com/api/json/v1/1/lookup.php?i="
 
 // const APIKEY = ""; API key de DeepL
 
+const traducir = async (palabra, langpair) => {
+  // Solicitud a la API de traducción de español a ingles
+  let translateING = await fetch(`${urlTranslate}${encodeURIComponent(palabra)}&${langpair}`)
+  // traducir("EN")  --> integración con API DeepL, solo funciona en backend
+  const ingTraducido = await translateING.json()
+  return ingTraducido.responseData.translatedText
+}
+
 const search = async() => {
   try{
-    // Solicitud a la API de traducción de español a ingles
-    let translateING = await fetch(`${urlTranslate}${encodeURIComponent(inputSearch.value)}&${langpair}`)
-    // traducir("EN")  --> integración con API DeepL, solo funciona en backend
-    const ingTraducido = await translateING.json()
-    // console.log(ingTraducido.responseData.translatedText)
+    let traducido = await traducir(inputSearch.value, langpair1)
     // Armamos la url con el ingrediente traducido al ingles para obtener recetas que contengan este ingrediente
-    let url = urlSearchMealAPI + `${ingTraducido.responseData.translatedText}`
+    let url = urlSearchMealAPI + `${traducido}`
     // Realizamos la peticion a la API de recetas
     const recetasEnBruto = await fetch(url);
     const recetasRefinadas = await recetasEnBruto.json();
@@ -38,10 +43,10 @@ const searchDetails = async(idMeal) => {
   try{
     let details = await fetch(`${urlDetails}${idMeal}`)
     let dataDetails = await details.json()
-    console.log(dataDetails.meals[0])
+    // console.log(dataDetails.meals[0])
     return dataDetails.meals[0]
   }catch{
-    
+    console.log("No se encontraroon detalles")
   }
 }
 
@@ -61,16 +66,20 @@ const mostrarRecetas = (recetas) => {
     recetas.forEach(async receta => {
       const {idMeal, strMeal, strMealThumb} = receta;
       // console.log(`${idMeal} ${strMeal} ${strMealThumb}`)
-     let details = await searchDetails(idMeal)
+      let details = await searchDetails(idMeal)
       const ingredientes = Object.keys(details)
         .filter(key => key.startsWith("strIngredient"))
         .map(key => details[key]);
-    console.log(ingredientes)
-    // ingredientes.forEach()
-    const ingredientesFiltrados = ingredientes.filter(i=>i!="")
+      // console.log(ingredientes)
+      // ingredientes.forEach()
+      const ingredientesFiltrados = ingredientes.filter(i => (i!="" && i!=null && i!=" "))
+      const translatedIng = []
+      // ingredientesFiltrados.forEach( async ingrediente =>{
+      //   console.log(await traducir(ingrediente, langpair2))
+      // })
       let listaDeIngredientes = ""
-     ingredientesFiltrados.forEach(ingrediente => listaDeIngredientes += `<li>${ingrediente}</li>`)
-    console.log(listaDeIngredientes)
+      ingredientesFiltrados.forEach(ingrediente => listaDeIngredientes += `<li>${ingrediente}</li>`)
+      // console.log(listaDeIngredientes)
       contResult.innerHTML += `<div class="col">
                                 <div class="card">
                                   <div class="card-inner">
@@ -92,9 +101,8 @@ const mostrarRecetas = (recetas) => {
                                   </div>
                                 </div>
                               </div>`
-
-  });
-}
+    });
+  }
 }
 
 // Se agrega un listener al ocurrir el evento click en el btn de busqueda

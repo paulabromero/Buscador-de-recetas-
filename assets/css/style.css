@@ -95,9 +95,10 @@ footer {
   transform: rotateY(180deg);
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   padding: 20px;
+  overflow-y: auto;
 }
 
 .card-img-top {
@@ -143,6 +144,57 @@ footer {
 .card-back .btn:hover {
   background-color: #ce945f;
   transform: scale(1.05);
+}
+
+/* Lista de ingredientes con scroll */
+.card-back ul {
+  width: 100%;
+  max-height: 150px;
+  overflow-y: auto;
+  text-align: left;
+  padding: 10px 20px;
+  margin: 10px 0;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  list-style-type: none;
+}
+
+.card-back ul li {
+  padding: 5px 0;
+  border-bottom: 1px solid #dee2e6;
+  position: relative;
+  padding-left: 20px;
+}
+
+.card-back ul li:last-child {
+  border-bottom: none;
+}
+
+.card-back ul li:before {
+  content: "•";
+  color: #28a745;
+  font-weight: bold;
+  position: absolute;
+  left: 5px;
+}
+
+/* Scrollbar personalizado */
+.card-back ul::-webkit-scrollbar {
+  width: 6px;
+}
+
+.card-back ul::-webkit-scrollbar-track {
+  background: #e9ecef;
+  border-radius: 10px;
+}
+
+.card-back ul::-webkit-scrollbar-thumb {
+  background: #28a745;
+  border-radius: 10px;
+}
+
+.card-back ul::-webkit-scrollbar-thumb:hover {
+  background: #218838;
 }
 
 .footer-custom {
